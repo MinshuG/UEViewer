@@ -918,6 +918,17 @@ struct FAnimSyncMarker
 	END_PROP_TABLE
 };
 
+struct FFrameRate
+{
+	DECLARE_STRUCT(FFrameRate)
+	int32					Numerator;
+	int32					Denominator;
+	BEGIN_PROP_TABLE
+		PROP_INT(Numerator)
+		PROP_INT(Denominator)
+	END_PROP_TABLE
+};
+
 struct FBakedCustomAttributePerBoneData
 {
 	DECLARE_STRUCT(FBakedCustomAttributePerBoneData);
@@ -939,7 +950,10 @@ class UAnimSequence4 : public UAnimSequenceBase
 public:
 	int32					NumFrames;
 	TArray<FRawAnimSequenceTrack> RawAnimationData;
+	TArray<byte>            SerializedByteStream;
 	TArray<uint8>			CompressedByteStream;
+	FString                 BoneCodecDDCHandle;
+
 	TArray<FCompressedSegment> CompressedSegments;
 	bool					bUseRawDataOnly;
 
@@ -962,6 +976,7 @@ public:
 	bool					bEnableRootMotion;
 	TArray<FAnimSyncMarker>	AuthoredSyncMarkers;
 	TArray<FBakedCustomAttributePerBoneData> BakedPerBoneCustomAttributeData;
+	FFrameRate              TargetFrameRate;
 
 	BEGIN_PROP_TABLE
 		PROP_INT(NumFrames)
@@ -985,6 +1000,7 @@ public:
 		PROP_BOOL(bEnableRootMotion)
 		PROP_ARRAY(AuthoredSyncMarkers, "FAnimSyncMarker")
 		PROP_ARRAY(BakedPerBoneCustomAttributeData, "FBakedCustomAttributePerBoneData")
+		PROP_STRUC(TargetFrameRate, FFrameRate)
 	END_PROP_TABLE
 
 	UAnimSequence4()
@@ -1051,6 +1067,7 @@ public:
 	REGISTER_CLASS(FTrackToSkeletonMap) \
 	REGISTER_CLASS(FRichCurve) \
 	REGISTER_CLASS(FFloatCurve) \
+	REGISTER_CLASS(FFrameRate) \
 	REGISTER_CLASS(FRawCurveTracks) \
 	REGISTER_CLASS(FVirtualBone) \
 	REGISTER_CLASS(FBoneNode) \
